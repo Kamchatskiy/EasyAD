@@ -1,22 +1,19 @@
-name: team${TEAM_ID}
+name: team${ID}
 
 services:
   # Specify services here
   # example:
-  #   container_name: team${TEAM_ID}-service1
+  #   container_name: team${ID}-service1
   #   restart: no
   #   image: service:latest
-  #   environment:
-  #     TEAM_ID: ${TEAM_ID}
-  #     TEAM_TOKEN: ${TEAM_TOKEN}
   #   volumes:
-  #     - main_volume:/app
+  #     - main_vol:/app
   #   networks:
   #     battlefield:
-  #       ipv4_address: 10.10.${TEAM_ID}.5
+  #       ipv4_address: 10.10.${ID}.5
 
   code-server:
-    container_name: team${TEAM_ID}-code
+    container_name: team${ID}-code
     restart: always
     image: codercom/code-server:latest
     read_only: true
@@ -27,24 +24,24 @@ services:
       - source: code-conf
         target: /home/coder/.config/config.yaml
     volumes:
-      - main_volume:/home/coder/
+      - main_vol:/home/coder/services
     networks:
       battlefield:
-        ipv4_address: 10.10.${TEAM_ID}.3
+        ipv4_address: 10.10.${ID}.3
     expose:
       - 80
 
   flag-sender:
-    container_name: team${TEAM_ID}-fs
+    container_name: team${ID}-fs
     restart: always
     image: team-fs:latest
     user: fs:fs
     environment:
-      TEAM_TOKEN: ${TEAM_TOKEN}
+      TEAM_TOKEN: ${TOKEN}
       JUDGE_IP: ${JUDGE_IP}
     networks:
       battlefield:
-        ipv4_address: 10.10.${TEAM_ID}.4
+        ipv4_address: 10.10.${ID}.4
     expose:
       - 80
     cpus: 0.5
@@ -65,7 +62,7 @@ configs:
       disable-file-uploads: true
 
 volumes:
-  main_volume:
+  main_vol:
 
 networks:
   battlefield:

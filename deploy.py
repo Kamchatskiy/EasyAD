@@ -13,7 +13,7 @@ def generate_docker_compose_commands(config):
 
     for entry_id, entry in config.items():
         env_vars = {
-            "TEAM_ID": entry["id"],
+            "ID": entry["id"],
             "NAME": entry["name"],
             "TOKEN": entry["token"],
             "PASSWORD": entry["password"],
