@@ -1,0 +1,6 @@
+team1:
+  id: 1
+  name: example
+  token: c31e08c015eafdafs
+  password: pass
+  judge_ip: 10.10.0.10

@@ -1,0 +1,3 @@
+include:
+  - docker/infra.docker-compose.yml
+  - docker/admin.docker-compose.yml

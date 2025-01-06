@@ -1,0 +1,72 @@
+name: team${TEAM_ID}
+
+services:
+  # Specify services here
+  # example:
+  #   container_name: team${TEAM_ID}-service1
+  #   restart: no
+  #   image: service:latest
+  #   environment:
+  #     TEAM_ID: ${TEAM_ID}
+  #     TEAM_TOKEN: ${TEAM_TOKEN}
+  #   volumes:
+  #     - main_volume:/app
+  #   networks:
+  #     battlefield:
+  #       ipv4_address: 10.10.${TEAM_ID}.5
+
+  code-server:
+    container_name: team${TEAM_ID}-code
+    restart: always
+    image: codercom/code-server:latest
+    read_only: true
+    environment:
+      - PASSWORD=${PASSWORD}
+      - CODE_SERVER_CONFIG=/home/coder/.config/config.yaml
+    configs:
+      - source: code-conf
+        target: /home/coder/.config/config.yaml
+    volumes:
+      - main_volume:/home/coder/
+    networks:
+      battlefield:
+        ipv4_address: 10.10.${TEAM_ID}.3
+    expose:
+      - 80
+
+  flag-sender:
+    container_name: team${TEAM_ID}-fs
+    restart: always
+    image: team-fs:latest
+    user: fs:fs
+    environment:
+      TEAM_TOKEN: ${TEAM_TOKEN}
+      JUDGE_IP: ${JUDGE_IP}
+    networks:
+      battlefield:
+        ipv4_address: 10.10.${TEAM_ID}.4
+    expose:
+      - 80
+    cpus: 0.5
+    mem_limit: 256m
+    mem_reservation: 64M
+
+configs:
+  code-conf:
+    content: |
+      bind-addr: 0.0.0.0:80
+      auth: password
+      cert: false
+      app-name: VS Code
+      welcome-text: Welcome!
+      locale: en
+      disable-telemetry: true
+      disable-update-check: true 
+      disable-file-uploads: true
+
+volumes:
+  main_volume:
+
+networks:
+  battlefield:
+    external: true

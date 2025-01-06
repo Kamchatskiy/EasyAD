@@ -1,0 +1,43 @@
+name: vpn
+
+services:
+  wireguard:
+    container_name: wireguard
+    restart: always
+    image: lscr.io/linuxserver/wireguard:latest
+    read_only: true
+    tmpfs:
+      - /run:exec
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - SERVERPORT=51820
+      - PEERS=20
+      - PEERDNS=auto
+      - INTERNAL_SUBNET=10.9.0.0
+      - ALLOWEDIPS=10.10.0.0/20
+      - PERSISTENTKEEPALIVE_PEERS=1
+      - LOG_CONFS=true
+    volumes:
+      - wireguard-data:/config
+      - /lib/modules:/lib/modules
+    ports:
+      - 51820:51820/udp
+
+volumes:
+  wireguard-data:
+
+networks:
+  battlefield:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.name: "battlefield"
+    ipam:
+      config:
+        - subnet: 10.10.0.0/20
